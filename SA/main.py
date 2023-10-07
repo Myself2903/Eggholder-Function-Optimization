@@ -21,7 +21,7 @@ def plotter(E,A, solution):
     plt.show()
 
 if __name__ == '__main__':
-    ex_times = 20
+    ex_times = 50
     best_solutions = []
     best_fitnesses = []
     n_iters = []
@@ -43,7 +43,8 @@ if __name__ == '__main__':
         iter_time.append(end_time)
         print(f' Solution found in iter: {n_iter}')
     
-    var = np.var(best_fitnesses)
+    var = np.var(np.array(best_fitnesses))
+    # print("fitnesses:",best_fitnesses)
     best_fitness = min(best_fitnesses)
     best_solution = (*best_solutions[best_fitnesses.index(best_fitness)], best_fitness)
     
