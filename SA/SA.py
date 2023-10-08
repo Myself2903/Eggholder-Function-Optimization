@@ -22,10 +22,10 @@ class SimAnneal():
         return (random.uniform(*xinterval), random.uniform(*yinterval))
     
     def gen_intervals(self, value):
-        min = value-self.neighbour_delta if value-self.neighbour_delta >= self.interval[0] else self.interval[0]
-        max = value+self.neighbour_delta if value+self.neighbour_delta <= self.interval[1] else self.interval[1]
-        return (min,max)
-    #     # return (-512,512)
+        # min = value-self.neighbour_delta if value-self.neighbour_delta >= self.interval[0] else self.interval[0]
+        # max = value+self.neighbour_delta if value+self.neighbour_delta <= self.interval[1] else self.interval[1]
+        # return (min,max)
+        return (-512,512)
 
 
     #gen a random solution with random values (x,y)
