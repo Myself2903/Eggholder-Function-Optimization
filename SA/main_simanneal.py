@@ -28,14 +28,25 @@ def plotter(E,A, solution):
 
 class EggholderProblem(Annealer):
     
-    def __init__(self, state, interval=[-512,512]):
+    def __init__(self, state, interval=[-512,512], neighbour_delta=256, Tmax=25000, Tmin=2.5, steps=20000):
         self.interval = interval
         self.energies = []
+        self.neighbour_delta = neighbour_delta
+        self.Tmax = Tmax
+        self.Tmin = Tmin
+        self.steps = steps
         super(EggholderProblem, self).__init__(state)
 
     #new solution creation
     def move(self):
-        self.state = [np.random.uniform(*self.interval), np.random.uniform(*self.interval)]
+        xinterval, yinterval = self.state
+        xinterval = (xinterval-self.neighbour_delta if xinterval-self.neighbour_delta >= self.interval[0] else self.interval[0],
+                     xinterval+self.neighbour_delta if xinterval+self.neighbour_delta <= self.interval[1] else self.interval[1])
+        
+        yinterval = (yinterval-self.neighbour_delta if yinterval-self.neighbour_delta >= self.interval[0] else self.interval[0],
+                     yinterval+self.neighbour_delta if yinterval+self.neighbour_delta <= self.interval[1] else self.interval[1])
+        
+        self.state = [np.random.uniform(*xinterval), np.random.uniform(*yinterval)]
 
     #fitness function
     def energy(self):
@@ -47,7 +58,7 @@ class EggholderProblem(Annealer):
 
 if __name__ == '__main__':
     interval = [-512,512]
-    experiment_iter = 50
+    experiment_iter = 30
     energies = []
     execution_times = []
     best_solution = None
@@ -56,12 +67,8 @@ if __name__ == '__main__':
     for i in range(experiment_iter):
         initial_state = [np.random.uniform(*interval), np.random.uniform(*interval)]
         simAnneal = EggholderProblem(initial_state, interval)
+    
         init_time = time()
-
-        simAnneal.steps = 20000
-        simAnneal.Tmax = 100
-        simAnneal.Tmin = 1
-
         state, energy = simAnneal.anneal()
         end_time = time()
         execution_time = end_time - init_time
