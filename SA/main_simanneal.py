@@ -28,7 +28,7 @@ def plotter(E,A, solution):
 
 class EggholderProblem(Annealer):
     
-    def __init__(self, state, interval=[-512,512], neighbour_delta=256, Tmax=25000, Tmin=2.5, steps=20000):
+    def __init__(self, state, interval=[-512,512], neighbour_delta=128, Tmax=25000, Tmin=2.5, steps=20000):
         self.interval = interval
         self.energies = []
         self.neighbour_delta = neighbour_delta
@@ -61,10 +61,13 @@ if __name__ == '__main__':
     experiment_iter = 30
     energies = []
     execution_times = []
+    convergences = []
     best_solution = None
     best_energy = float("Inf")
 
     for i in range(experiment_iter):
+        print('-'*100)
+        print(f'starting iter {i}:')
         initial_state = [np.random.uniform(*interval), np.random.uniform(*interval)]
         simAnneal = EggholderProblem(initial_state, interval)
     
@@ -72,19 +75,21 @@ if __name__ == '__main__':
         state, energy = simAnneal.anneal()
         end_time = time()
         execution_time = end_time - init_time
-
+        convergence = simAnneal.energies.index(energy)
+        
         energies.append(energy)
         execution_times.append(execution_time)
-        
+        convergences.append(convergence)
+
         if energy < best_energy:
             best_energy = energy
             best_solution = state
 
         # Imprimir la solución encontrada
-        print('-'*100)
         print("Best State: ", state)
         print("Best Energy: ", energy)
         print(f"Execution time: {execution_time:.4f}")
+        print(f'Iter convergence: {convergence}')
 
     print()
     print('-'*100)
@@ -93,6 +98,7 @@ if __name__ == '__main__':
     print(f'Average Energy: {np.mean(energies)}')
     print(f'Variance: {np.var(energies)}')
     print(f'Average execution time: {np.mean(execution_times):.4f}')
+    print(f'Average Iter Convergence: {np.mean(convergences)}')
 
     plt.plot([i for i in range(len(simAnneal.energies))], simAnneal.energies)
     plt.ylabel("Energy")

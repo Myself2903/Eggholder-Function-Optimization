@@ -25,11 +25,12 @@ def plotter(E,A, solution):
         print(e)
 
 if __name__ == '__main__':
-    experiment_iter = 30
+    experiment_iter = 10
     execution_times = []
     best_solution = None
     best_fitness = float("Inf")
     fitnesses = []
+    convergences = []
 
     var_bound = np.array([[-512,512]]*2)
     params = {'max_num_iteration': 5000,\
@@ -56,6 +57,9 @@ if __name__ == '__main__':
 
         final_time = time()
         ex_time = final_time-init_time
+        convergence = list(map(lambda x: round(x,2),model.report))
+        convergence = convergence.index(round(result.score,2))
+        convergences.append(convergence)
 
         execution_times.append(ex_time)
         fitnesses.append(result.score)
@@ -67,6 +71,7 @@ if __name__ == '__main__':
         print(f'\nSolution: {result.variable}')
         print(f'Fitness: {result.score}')
         print(f'Execution time: {ex_time:.4f}')
+        print(f"Iter convergence: {convergence}")
     
     print('-'*100)
     print(f'Best Solution: {best_solution}')
@@ -74,7 +79,7 @@ if __name__ == '__main__':
     print(f'Average Fitness: {np.mean(fitnesses):.4f}')
     print(f'Fitness Variance: {np.var(fitnesses):.4f}')
     print(f'Average Execution Time: {np.mean(execution_times)}')
-
+    print(f'Average Iter Convergence: {np.mean(convergences)}')
 
     x1=np.linspace(-512,512,100)
     x2=np.linspace(-512,512,100)

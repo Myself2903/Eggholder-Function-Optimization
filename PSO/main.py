@@ -40,6 +40,7 @@ if __name__ == '__main__':
     experiment_iter = 20
     execution_time_history = []
     fitness_history = []
+    convergences = []
     best_fitness = float("Inf")
     best_solution = None
 
@@ -47,21 +48,27 @@ if __name__ == '__main__':
         print('-'*100)
         print(f'starting iter {i}:')
         init_time = time()
+        
         optimizer = GlobalBestPSO(n_particles = 10, dimensions=2, options=options, bounds=bounds)
         fitness, solution = optimizer.optimize(eggholder_function_PSO, iters=10000)
         
         end_time = time()
         execution_time = end_time - init_time
-
+        convergence = list(map(lambda x: round(x,2),optimizer.cost_history))
+        convergence = convergence.index(round(fitness,2))
+        
         if fitness < best_fitness:
             best_fitness = fitness
             best_solution = solution
 
         fitness_history.append(fitness)
         execution_time_history.append(execution_time)
+        convergences.append(convergence)
+        
         print("\nBest Solution:", solution)
         print("Best Fitness:", fitness)
         print(f"Execution Time: {execution_time:.4f}")
+        print(f"Iter convergence: {convergence}")
 
     print()
     print('-'*100)
@@ -70,6 +77,7 @@ if __name__ == '__main__':
     print(f'Average Fitness: {np.mean(fitness_history):.4f}')
     print(f'Fitness Variance: {np.var(fitness_history):.4f}')
     print(f'Average Execution Time: {np.mean(execution_time_history):.4f}')
+    print(f'Average Iter Convergence: {np.mean(convergences)}')
 
     plot_cost_history(cost_history=optimizer.cost_history)
     plt.show()
