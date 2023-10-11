@@ -39,15 +39,10 @@ class EggholderProblem(Annealer):
 
     #new solution creation
     def move(self):
-        xinterval, yinterval = self.state
-        xinterval = (xinterval-self.neighbour_delta if xinterval-self.neighbour_delta >= self.interval[0] else self.interval[0],
-                     xinterval+self.neighbour_delta if xinterval+self.neighbour_delta <= self.interval[1] else self.interval[1])
+        delta = np.random.uniform(-self.neighbour_delta,self.neighbour_delta,2)
+        self.state[0] = self.state[0]+delta[0] if self.interval[0] <= self.state[0] + delta[0] <= self.interval[1] else self.state[0]
+        self.state[1] = self.state[1]+delta[1] if self.interval[0] <= self.state[1] + delta[1] <= self.interval[1] else self.state[1]
         
-        yinterval = (yinterval-self.neighbour_delta if yinterval-self.neighbour_delta >= self.interval[0] else self.interval[0],
-                     yinterval+self.neighbour_delta if yinterval+self.neighbour_delta <= self.interval[1] else self.interval[1])
-        
-        self.state = [np.random.uniform(*xinterval), np.random.uniform(*yinterval)]
-
     #fitness function
     def energy(self):
         energy = eggholder_function(self.state)
